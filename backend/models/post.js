@@ -1,13 +1,13 @@
 const mongoose = require("mongoose");
 
 const postSchema = mongoose.Schema({
-    images:{
+    images: {
         type: [{mage: String}],
         required: true
     },
-    message:{type: String, required:false},
+    message: {type: String, required: false},
     likers: {
-        type:[{userId:mongoose.Types.ObjectId}],
+        type:[{userId: mongoose.Types.ObjectId}],
         default: [], required: false
     },
     comments: {
@@ -15,7 +15,9 @@ const postSchema = mongoose.Schema({
         required: false,
         default: []
     },
-    createdAt:{type:Date, required:true, default:Date.now()}
+    createdAt: {type: Date, required: true, default: Date.now()},
+    isDeleted: {type: Boolean, required: true, default: false}
+    
 });
 
 module.exports = mongoose.model("Post", postSchema);
