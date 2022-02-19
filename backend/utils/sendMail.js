@@ -74,7 +74,7 @@ const sendMail = ({_id, name, email}, res)=>{
             userVerif.save()
                 .then(() => {
                     transporter.sendMail(mailOptions);
-                    return res.status(200).json({message: "Saved successfully Verify your email to confirm the account"})
+                    return res.status(201).json({message: "Saved successfully Verify your email to confirm the account"})
                 })
                 .catch(error =>{
                     User.findByIdAndDelete({_id:_id});

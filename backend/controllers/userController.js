@@ -60,7 +60,7 @@ const login = (req, res)=>{
                 const token = jwt.sign({_id: user._id}, process.env.AUTH_SECRRET, {expiresIn: "6h"});
 
                 res.cookie("auth_token",token); //setting cookie
-                res.status(200).redirect("/api/home");
+                res.status(308).redirect("/api/home");
 
             }).catch((error) =>{
                 return res.status(401).json({message:`Something went wronng! ${error.message}`});
@@ -118,7 +118,7 @@ const authVerification = (req, res, next)=>{
             next();
         } catch (error) {
             res.clearCookie("auth_token");
-            return res.status(401).json({message:"Invalid credentials !"});
+            return res.status(498).json({message:"Invalid credentials !"});
         }
     }
 }
