@@ -57,7 +57,7 @@ const login = (req, res)=>{
                 if(!isMatched) return res.status(401).json({message:"Invalid credentials!"});
 
                 //build the token 
-                const token = jwt.sign({_id: user._id}, process.env.AUTH_SECRRET, {expiresIn: "30s"});
+                const token = jwt.sign({_id: user._id}, process.env.AUTH_SECRRET, {expiresIn: "6h"});
 
                 res.cookie("auth_token",token); //setting cookie
                 res.status(200).redirect("/api/home");
@@ -114,7 +114,7 @@ const authVerification = (req, res, next)=>{
     }else{
         try {
             const {_id} = jwt.verify(token, process.env.AUTH_SECRRET);
-            req.userID = _id;
+            req.userId = _id;
             next();
         } catch (error) {
             res.clearCookie("auth_token");

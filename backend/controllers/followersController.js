@@ -1,7 +1,8 @@
 const User = require("../models/user");
 
 const follow = (req, res)=>{
-    const {uId, fId} = req.params;
+    const {fId} = req.params;
+    const uId = req.userId
     User.findOne({_id:uId})
         .then(user =>{
             console.log(user);
