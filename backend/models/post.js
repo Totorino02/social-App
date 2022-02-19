@@ -1,6 +1,7 @@
 const mongoose = require("mongoose");
 
 const postSchema = mongoose.Schema({
+    userId:{type: mongoose.Types.ObjectId, ref: 'User', required: true},
     images: {
         type: [{mage: String}],
         required: true
