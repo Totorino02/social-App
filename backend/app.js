@@ -9,6 +9,8 @@ const session = require("express-session");
 //
 const userRouter = require("./routes/user");
 const followRouter = require("./routes/followers");
+const homeRouter = require("./routes/home");
+
 //db connection
 mongoose.connect(process.env.DB_URI,{
         useNewUrlParser: true,
@@ -24,40 +26,22 @@ app.use(express.urlencoded({extended: false}))
 app.use((req, res, next)=>{
     res.setHeader("Control-Allow-Access-Origin","*");
     res.setHeader("Control-Allow-Access-Methods","GET, PUT, UPDATE, PUT, PATCH, DELETE");
-    res.setHeader("Control-Allow-Access-Headers", "Origin, X-Requested-With, Content, Accept, Content-Type, Authorization");
+    res.setHeader("Control-Allow-Access-Headers", "Origin, X-Requested-With, Content, Accept, Content-Type, Authorization, auth_token");
     next();
 });
+
 app.use(session({
-    key: "user_sid",
-    secret: process.env.SECRET,
+    key : "user_session",
+    secret: process.env.AUTH_SECRRET,
     resave: false,
-    saveUninitialized:false,
-    cookie:{
-        expires: 360000
-    }
-}))
+    saveUninitialized: false,
+}));
 
-app.get("/set-cookie",(req, res)=>{
-    res.cookie("foo", "bar",{
-        //maxAge: 5000,
-        expires: new Date("15 February 2022")
-    });
-    res.send("cookie was set to foo");
-})
-
-app.get("/get-cookie", (req, res)=>{
-    console.log(req.cookies.name);
-    res.send(req.cookies);
-})
-
-app.get("/del-cook", (req, res)=>{
-    res.clearCookie("name");
-    res.status(200).json({message: "Cookie was deleted"});
-})
 
 //routers
 app.use("/api/user", userRouter);
 app.use("/api",followRouter);
+app.use("/api", homeRouter);
 
 app.listen(PORT, ()=>{
     console.log(`Server linsten on ${PORT}`);

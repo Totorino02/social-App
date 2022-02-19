@@ -1,8 +1,9 @@
+require('dotenv').config();
 const User = require("../models/user");
 const bcrypt = require("bcrypt");
 const Userverification = require("../models/userVerification");
 const sendMail = require("../utils/sendMail");
-
+const jwt = require('jsonwebtoken');
 
 const register = async(req, res)=>{
     if(req.body.email){
@@ -42,7 +43,31 @@ const register = async(req, res)=>{
 };
 
 const login = (req, res)=>{
+    if(req.body.username && req.body.password){
+        const {username, password} = req.body;
+        User.findOne({username: username, isVerified: true})
+            .then(user =>{
+                if(!user){
+                    return res.status(401).json({message:"Invalid credentials!"});
+                }
+                const hashedPass = user.password;
 
+                //verify is the hanshedpass and plantpass matched
+                const isMatched =  bcrypt.compareSync(password, hashedPass)
+                if(!isMatched) return res.status(401).json({message:"Invalid credentials!"});
+
+                //build the token 
+                const token = jwt.sign({_id: user._id}, process.env.AUTH_SECRRET, {expiresIn: "30s"});
+
+                res.cookie("auth_token",token); //setting cookie
+                res.status(200).redirect("/api/home");
+
+            }).catch((error) =>{
+                return res.status(401).json({message:`Something went wronng! ${error.message}`});
+            })
+    }else{
+        return res.status(401).json({message:"Email or password field was empty!"});
+    }
 };
 
 const verifyCount = (req,res)=>{
@@ -82,8 +107,25 @@ const verifyCount = (req,res)=>{
         .catch()
 }
 
+const authVerification = (req, res, next)=>{
+    const token = req.cookies.auth_token
+    if(!token){
+        return res.status(401).json({message:"access denied !"});
+    }else{
+        try {
+            const {_id} = jwt.verify(token, process.env.AUTH_SECRRET);
+            req.userID = _id;
+            next();
+        } catch (error) {
+            res.clearCookie("auth_token");
+            return res.status(401).json({message:"Invalid credentials !"});
+        }
+    }
+}
+
 module.exports = {
     register,
     login,
-    verifyCount
+    verifyCount,
+    authVerification
 };
