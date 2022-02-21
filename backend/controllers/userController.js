@@ -107,6 +107,15 @@ const verifyCount = (req,res)=>{
         .catch()
 }
 
+const changProfile = (req, res)=>{
+    User.findById(req.userId)
+        .then(()=> {
+            User.findOneAndUpdate({_id:uid},{profileImage: req.file.filename})
+                .then((user)=> res.status(200).json(user))
+                .catch(()=> res.status(401).json({message: "Something went wrong"}));
+        })
+}
+
 const authVerification = (req, res, next)=>{
     const token = req.cookies.auth_token
     if(!token){
@@ -123,9 +132,11 @@ const authVerification = (req, res, next)=>{
     }
 }
 
+
 module.exports = {
     register,
     login,
     verifyCount,
+    changProfile,
     authVerification
 };
