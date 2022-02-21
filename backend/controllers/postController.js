@@ -61,22 +61,25 @@ const deletePost = (req, res)=>{
 const showPost = (req,res)=>{
     if(req.params.id){
         const {id} = req.params;
-
-        Post.findById(id)
-            .then( post =>{
-                if(!post) return res.status(401).json({message: "Something Went Wrong"});
-                res.status(200).json(post);
-            })
-            .catch( error => res.status(401).json({message: "Something Went Wrong"}));
+        Post.findOne({_id: id, isDeleted:false})
+            .then( post => res.status(200).json(post))
+            .catch( error => res.status(401).json({message: "Something went wrong"}));
     }else{
         return res.status(401).json({message: "Invalid Url"});
     }
+}
+
+const allPost = (req, res)=>{
+    Post.find({userId: req.userId, isDeleted:false})
+        .then(posts => res.status(200).json(posts))
+        .catch(()=> res.status(401).json({message: "Something went wrong"}));
 }
 
 module.exports = {
     createPost,
     deletePost,
     showPost,
+    allPost,
     like,
     comment
 }
