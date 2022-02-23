@@ -20,6 +20,7 @@ const register = async(req, res)=>{
                             email: email,
                             dateOfBirth: req.body.dateOfBirth,
                             password: hashedPass,
+                            profileImage:process.env.PROFIL_IMAGE
                         });
                         user.save()
                             .then((user)=>{
