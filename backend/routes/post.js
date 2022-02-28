@@ -8,7 +8,7 @@ const upload = multer({storage: postStorage}).fields([{name: 'image', maxCount:8
 
 router.post("/create", authVerification, upload, createPost);
 
-router.get("/all", authVerification, allPost);
+router.get("/all", allPost);
 
 router.get("/:id", authVerification, showPost);
 

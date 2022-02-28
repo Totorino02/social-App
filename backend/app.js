@@ -3,7 +3,7 @@ const express = require("express");
 const mongoose = require("mongoose");
 const morgan =  require('morgan');
 const app = express();
-const PORT = process.env.PORT || 3300;
+const PORT = process.env.PORT || 5000;
 const cookieParser = require("cookie-parser");
 const session = require("express-session");
 
@@ -27,9 +27,9 @@ app.use(morgan('dev'))
 app.use(express.json());
 app.use(express.urlencoded({extended: false}))
 app.use((req, res, next)=>{
-    res.setHeader("Control-Allow-Access-Origin","*");
-    res.setHeader("Control-Allow-Access-Methods","GET, PUT, UPDATE, PUT, PATCH, DELETE");
-    res.setHeader("Control-Allow-Access-Headers", "Origin, X-Requested-With, Content, Accept, Content-Type, Authorization, auth_token");
+    res.setHeader("Access-Control-Allow-Origin", "*");
+    res.setHeader("Access-Control-Allow-Methods", "GET, POST, PUT, PATCH, UPDATE, DELETE, ");
+    res.setHeader("Access-Control-Allow-Headers", "Origin, X-Requested-With, Content, Accept, Content-Type, Authorization");
     next();
 });
 

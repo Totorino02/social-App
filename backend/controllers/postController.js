@@ -70,7 +70,8 @@ const showPost = (req,res)=>{
 }
 
 const allPost = (req, res)=>{
-    Post.find({userId: req.userId, isDeleted:false})
+    const userId = '620a83ef86d583d94a493cd9';
+    Post.find({userId: userId, isDeleted:false})
         .then(posts => res.status(200).json(posts))
         .catch(()=> res.status(401).json({message: "Something went wrong"}));
 }
